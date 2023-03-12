@@ -1,4 +1,84 @@
-﻿//https://codeforces.com/problemset/problem/1796/D --2000
+﻿//https://codeforces.com/problemset/problem/1792/C --1500
+#include <iostream>
+int main ()
+{
+  int t, n, p[200000];
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    for (int i = 0; i < n; ++i)
+      std::cin >> p[i];
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1792/B --1200
+#include <iostream>
+#include <algorithm>
+int main ()
+{
+  int t, a[4], alice, bob, ans;
+  std::cin >> t;
+
+  auto apply = [&] (const int alice_dif, const int bob_dif, int &val)
+    {
+      val -= std::abs (alice_dif);
+      ans += std::abs (alice_dif);
+      alice += alice_dif;
+      bob += bob_dif;
+    };
+  while (t--)
+    {
+      for (int i = 0; i < 4; ++i)
+        std::cin >> a[i];
+      alice = 0, bob = 0, ans = 0;
+
+      apply (a[0], a[0], a[0]);
+
+      if (alice > 0)
+        {
+          int temp = std::min (a[1], a[2]);
+          ans += temp * 2;
+          a[1] -= temp;
+          a[2] -= temp;
+        }
+
+      apply ( std::min (bob  , a[1]), -std::min (bob  , a[1]), a[1]);
+      apply (-std::min (alice, a[2]),  std::min (alice, a[2]), a[2]);
+
+      apply (-std::min (std::min (alice, bob), a[3]), -std::min (std::min (alice, bob), a[3]), a[3]);
+
+      std::cout << ans + (a[0] + a[1] + a[2] + a[3] > 0 ? 1 : 0) << std::endl;
+    }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1792/A --800
+#include <iostream>
+int main ()
+{
+  int t, n, h[100], h1;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    h1 = 0;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> h[i];
+      if (h[i] == 1)
+        h1++;
+    }
+    std::cout << n - h1 / 2 << std::endl;
+  }
+}
+*/
+
+/*
+// time limit on test 5
+//https://codeforces.com/problemset/problem/1796/D --2000
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -72,6 +152,7 @@ int main ()
     std::cout << ans << std::endl;
   }
 }
+*/
 
 /*
 WRONG TRY
