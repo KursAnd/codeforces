@@ -1,6 +1,37 @@
-﻿//https://codeforces.com/problemset/problem/1792/C --1500
+﻿// https://codeforces.com/problemset/problem/1792/D --1700
 #include <iostream>
-int t, n, p[200000];
+#include <vector>
+#include <map>
+int main ()
+{
+  int t, n, m;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> m;
+
+    std::vector<std::vector<int>> v;
+    v.reserve (n);
+
+    std::vector<std::map<int, std::vector<int>>> s (m);
+
+    for (int i = 0; i < n; ++i)
+    {
+      v.push_back (std::vector<int> (m));
+      for (int j = 0; j < m; ++j)
+      {
+        std::cin >> v[i][j];
+        v[i][j]--;
+        s[j][v[i][j]].push_back (i);
+      }
+    }
+  }
+}
+
+/*
+//https://codeforces.com/problemset/problem/1792/C --1500
+#include <iostream>
+int t, n, p[200000], q[200000], l, r;
 int main ()
 {
   std::cin >> t;
@@ -8,9 +39,36 @@ int main ()
   {
     std::cin >> n;
     for (int i = 0; i < n; ++i)
-      std::cin >> p[i];
+    {
+	    std::cin >> p[i];
+	    q[p[i] - 1] = i;
+    }
+    if (n == 1)
+    {
+	    std::cout << "0\n";
+	    continue;
+    }
+
+    if (n % 2 == 0)
+    {
+	    r = n / 2;
+	    l = r - 1;
+    }
+    else
+    {
+	    l = n / 2 - 1;
+	    r = l + 2;
+    }
+
+    while (l >= 0 && q[l] < q[l + 1] && q[r - 1] < q[r])
+    {
+	    --l; ++r;
+    }
+
+    std::cout << l + 1 << std::endl;
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1792/B --1200
