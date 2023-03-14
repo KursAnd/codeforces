@@ -2,9 +2,37 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <set>
+int t, n, m;
+std::vector<std::map<int, std::set<int>>> s;
+std::vector<int> start_size;
+int recu_solver (std::set<int> &best_set, const int size, const std::vector<int> &ids)
+{
+  if (size == m)
+  {
+    for (const int i : best_set)
+      start_size[i] = 1;
+    return size;
+  }
+  std::set<int> &check_set = s[ids[size]][size];
+  if (check_set.empty ())
+    best_set.clear ();
+  else
+  {
+    for (auto it = best_set.begin (); it != best_set.end ();)
+      if (check_set.count (*it))
+        ++it;
+      else
+      {
+        it = best_set.erase (it);
+      }
+  }
+  if (best_set.empty ())
+    return size;
+  return recu_solver (best_set, size + 1, ids);
+}
 int main ()
 {
-  int t, n, m;
   std::cin >> t;
   while (t--)
   {
@@ -13,7 +41,11 @@ int main ()
     std::vector<std::vector<int>> v;
     v.reserve (n);
 
-    std::vector<std::map<int, std::vector<int>>> s (m);
+    start_size.clear ();
+    start_size.resize (n, 0);
+
+    s.clear ();
+    s.resize (m);
 
     for (int i = 0; i < n; ++i)
     {
@@ -22,9 +54,21 @@ int main ()
       {
         std::cin >> v[i][j];
         v[i][j]--;
-        s[j][v[i][j]].push_back (i);
+        s[j][v[i][j]].insert (i);
       }
     }
+    std::set<int> full_set;
+    for (int i = 0; i <= n / 2; ++i)
+    {
+      full_set.insert (i);
+      full_set.insert (n - i - 1);
+    }
+
+    for (int i = 0; i < n; ++i)
+      {
+        std::set<int> set (full_set);
+        std::cout << recu_solver (set, start_size[i], v[i]) << " \n"[i == n - 1];
+      }
   }
 }
 
