@@ -1,6 +1,62 @@
-﻿// https://codeforces.com/problemset/problem/1792/D --1700
+﻿// https://codeforces.com/contest/1794/problem/B --900
 #include <iostream>
 #include <vector>
+int main ()
+{
+  int t, n;
+  std::vector<int> a;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    a.resize (n);
+    for (int i = 0; i < n; ++i)
+      std::cin >> a[i];
+    for (int i = 0; i < n - 1; ++i)
+      if (a[i] == 1)
+        ++a[i];
+    for (int i = 0; i < n - 1; ++i)
+    {
+      if (a[i + 1] % a[i] == 0)
+        ++a[i + 1];
+      std::cout << a[i] << " ";
+    }
+    std::cout << a[n - 1] << std::endl;
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1794/A --800
+#include <iostream>
+#include <string>
+#include <algorithm>
+int main ()
+{
+  int t, n, m;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    m = (n + 1) / 2;
+    std::string s[2], s_read;
+    int si = 0;
+    for (int i = 0; i < 2 * n - 2; ++i)
+    {
+      std::cin >> s_read;
+      if (s_read.size () == m)
+        s[si++] = s_read;
+    }
+    std::reverse (s[0].begin (), s[0].end ());
+    std::cout << (s[0] == s[1] ? "YES" : "NO") << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1792/D --1700
+#include <iostream>
+#include <vector>
+#include <set>
 int main ()
 {
   int t, n, m;
@@ -20,17 +76,29 @@ int main ()
         w[i][v[i][j]] = j;
       }
 
-    std::list<int> all_ids;
+    std::set<std::vector<int>> s;
     for (int i = 0; i < n; ++i)
-      all_ids.push_back (i);
+    {
+      while (!w[i].empty ())
+      {
+        s.insert (w[i]);
+        w[i].pop_back ();
+      }
+    }
 
     for (int i = 0; i < n; ++i)
+    {
+      while (!v[i].empty ())
       {
-        auto ids (all_ids);
-        std::cout << (start_size[i] == m ? m : recu_solver (ids, 0, v[i])) << " \n"[i == n - 1];
+        if (s.count (v[i]))
+          break;
+        v[i].pop_back ();
       }
+      std::cout << v[i].size () << " \n"[i == n - 1];
+    }
   }
 }
+*/
 
 /*
 //https://codeforces.com/problemset/problem/1792/C --1500
