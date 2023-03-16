@@ -1,4 +1,35 @@
-﻿// https://codeforces.com/contest/1794/problem/B --900
+﻿// https://codeforces.com/problemset/problem/1799/A --800
+#include <iostream>
+int main ()
+{
+}
+
+/*
+// https://codeforces.com/problemset/problem/1794/C --1300
+#include <iostream>
+#include <queue>
+int main ()
+{
+  int t, n, d;
+  std::cin >> t;
+  while (t--)
+  {
+    std::queue<int> q;
+    std::cin >> n;
+    for (int i = 1; i <= n; ++i)
+    {
+      std::cin >> d;
+      q.push (d);
+      while (q.front () < q.size ())
+        q.pop ();
+      std::cout << q.size () << " \n"[i == n];
+    }
+  }
+}
+*/
+
+/*
+// https://codeforces.com/contest/1794/problem/B --900
 #include <iostream>
 #include <vector>
 int main ()
@@ -24,6 +55,7 @@ int main ()
     std::cout << a[n - 1] << std::endl;
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1794/A --800
