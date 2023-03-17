@@ -1,8 +1,138 @@
-﻿// https://codeforces.com/problemset/problem/1799/A --800
+﻿// https://codeforces.com/problemset/problem/1799/C --1700
 #include <iostream>
+#include <string>
 int main ()
 {
+  int t, alf[26];
+  std::string s;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> s;
+    for (int i = 0; i < 26; ++i)
+      alf[i] = 0;
+    for (const char c : s)
+      alf[c - 'a']++;
+
+    std::string ans_l, ans_r;
+    ans_l.reserve (s.size () / 2 + 1);
+    ans_r.reserve (s.size () / 2 + 1);
+    bool need_min = true;
+
+    for (int i = 0; i < 26; ++i)
+    {
+      const char c = 'a' + i;
+      if (need_min)
+      {
+        for (int j = 0; j < alf[i] / 2; ++j)
+        {
+          ans_l += c;
+          ans_r += c;
+          alf[i] -= 2;
+        }
+        if (alf[i] % 2)
+        {
+          need_min = false;
+          ans_r += c;
+          alf[i]--;
+        }
+      }
+      else
+      {
+        while (alf[i] > 0 && ans_l.size () < (s.size () + 1) / 2)
+        {
+          ans_l += c;
+          alf[i]--;
+        }
+        while (alf[i] > 0)
+        {
+          ans_r += c;
+          alf[i]--;
+        }
+      }
+    }
+    std::reverse (ans_r.begin (), ans_r.end ());
+    std::cout << ans_l << ans_r << std::endl;
+  }
 }
+
+/*
+// https://codeforces.com/problemset/problem/1799/B --1200
+#include <iostream>
+#include <map>
+#include <vector>
+#include <functional>
+int main ()
+{
+  int t, n, a[100];
+  std::vector<std::pair<int, int>> ans;
+  ans.reserve (30 * 100);
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    std::multimap<int, int, std::greater<int>> m;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> a[i];
+      m.insert ({a[i], i + 1});
+    }
+    if (n == 1)
+    {
+      std::cout << "0\n";
+      continue;
+    }
+    if (m.rbegin ()->first == 1)
+    {
+      std::cout << (m.begin ()->first == 1 ? "0" : "-1") << std::endl;
+      continue;
+    }
+    ans.clear ();
+    while (ans.size () < 30 * n && m.begin ()->first != m.rbegin ()->first)
+    {
+      auto it = m.begin ();
+      std::pair<int, int> big = *it;
+      it = m.erase (it);
+      while (it->first == big.first)
+        ++it;
+      big.first = big.first / it->first + (big.first % it->first ? 1 : 0);
+      m.insert (big);
+      ans.push_back ({big.second, it->second});
+    }
+    std::cout << ans.size () << std::endl;
+    for (const auto &el : ans)
+      std::cout << el.first << " " << el.second << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1799/A --800
+#include <iostream>
+#include <vector>
+#include <set>
+int main ()
+{
+  int t, n, m, p;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> m;
+    std::vector<int> ans (n, -1);
+    std::set<int> was;
+    for (int i = 1; i <= m; ++i)
+    {
+      std::cin >> p;
+      if (ans[0] != -1 || was.count (p))
+        continue;
+      was.insert (p);
+      ans[n - was.size ()] = i;
+    }
+    for (int i = 0; i < n; ++i)
+      std::cout << ans[i] << " \n"[i == n - 1];
+  }
+}
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1794/C --1300
