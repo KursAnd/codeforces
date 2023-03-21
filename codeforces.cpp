@@ -1,60 +1,84 @@
-﻿// https://codeforces.com/problemset/problem/1799/C --1700
+﻿// https://codeforces.com/problemset/problem/1800/A --800
 #include <iostream>
-#include <string>
 int main ()
 {
-  int t, alf[26];
-  std::string s;
+  int t, n;
+  std::cin >> t;
+  constexpr char ch[4]{'m', 'e', 'o', 'w'};
+  while (t--)
+  {
+    char c;
+    int cnt[4]{0,0,0,0};
+    std::cin >> n;
+    int st = 0;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> c;
+      if (c < 'a' || c > 'z')
+        c = c - 'A' + 'a';
+      if (st < 4 && c != ch[st])
+        ++st;
+      if (st < 4 && c == ch[st])
+        cnt[st]++;
+      else
+        st = 4;
+    }
+    std::cout << (st == 3 && cnt[0] > 0 && cnt[1] > 0 && cnt[2] > 0 && cnt[3] > 0 ? "YES" : "NO") << std::endl;
+  }
+}
+/*
+WRONG
+// https://codeforces.com/problemset/problem/1799/D1-2 --1900 --2100
+#include <iostream>
+#include <vector>
+#include <map>
+int main ()
+{
+  constexpr long long inf = 1e18;
+  int t, n, k;
+  std::vector<int> a, cold, hot;
+  constexpr int max_size = 300001;
+  a.reserve (max_size);
+  cold.reserve (max_size);
+  hot.reserve (max_size);
+
   std::cin >> t;
   while (t--)
   {
-    std::cin >> s;
-    for (int i = 0; i < 26; ++i)
-      alf[i] = 0;
-    for (const char c : s)
-      alf[c - 'a']++;
+    std::cin >> n >> k;
 
-    std::string ans_l, ans_r;
-    ans_l.reserve (s.size () / 2 + 1);
-    ans_r.reserve (s.size () / 2 + 1);
-    bool need_min = true;
+    a.resize (n);
+    for (int i = 0; i < n; ++i)
+      std::cin >> a[i];
 
-    for (int i = 0; i < 26; ++i)
+    cold.resize (k + 1);
+    for (int i = 1; i <= k; ++i)
+      std::cin >> cold[i];
+
+    hot.resize (k + 1);
+    for (int i = 1; i <= k; ++i)
+      std::cin >> hot[i];
+
+    std::map<int, std::map<int, long long>> dp;
+    dp[0][0] = 0;
+
+    for (int i = 0; i < n; ++i)
     {
-      const char c = 'a' + i;
-      if (need_min)
+      for (int j = 0; j < k; ++j)
       {
-        for (int j = 0; j < alf[i] / 2; ++j)
+        long long val1 = inf;
+        const auto dpj = dp.find (j);
+        if (dpj != dp.end ())
         {
-          ans_l += c;
-          ans_r += c;
-          alf[i] -= 2;
-        }
-        if (alf[i] % 2)
-        {
-          need_min = false;
-          ans_r += c;
-          alf[i]--;
-        }
-      }
-      else
-      {
-        while (alf[i] > 0 && ans_l.size () < (s.size () + 1) / 2)
-        {
-          ans_l += c;
-          alf[i]--;
-        }
-        while (alf[i] > 0)
-        {
-          ans_r += c;
-          alf[i]--;
+          const auto dpji = dpj->second.find (a[i]);
+          if (dpji != dpj->second.end ())
+            val1 = dpji->first + hot[a[i]];
         }
       }
     }
-    std::reverse (ans_r.begin (), ans_r.end ());
-    std::cout << ans_l << ans_r << std::endl;
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1799/B --1200
