@@ -1,4 +1,42 @@
-﻿// https://codeforces.com/problemset/problem/1800/A --800
+﻿// https://codeforces.com/problemset/problem/1800/B --1000
+#include <iostream>
+#include <algorithm>
+int main ()
+{
+  constexpr int alf_size = 26;
+  int t, n, k;
+  char c;
+  std::cin >> t;
+  while (t--)
+  {
+    int a[alf_size], A[alf_size];
+    for (int i = 0; i < alf_size; ++i) { a[i] = 0; A[i] = 0; }
+    std::cin >> n >> k;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> c;
+      if ('a' <= c && c <= 'z')
+        a[c - 'a']++;
+      else
+        A[c - 'A']++;
+    }
+    int ans = 0;
+    for (int i = 0; i < alf_size; ++i)
+    {
+      int add = std::min (a[i], A[i]);
+      ans += add; a[i] -= add; A[i] -= add;
+      if (k > 0)
+      {
+        add = std::min (std::max (a[i], A[i]) / 2, k);
+        ans += add;
+        k -= add;
+      }
+    }
+    std::cout << ans << std::endl;
+  }
+}
+/*
+// https://codeforces.com/problemset/problem/1800/A --800
 #include <iostream>
 int main ()
 {
@@ -26,6 +64,8 @@ int main ()
     std::cout << (st == 3 && cnt[0] > 0 && cnt[1] > 0 && cnt[2] > 0 && cnt[3] > 0 ? "YES" : "NO") << std::endl;
   }
 }
+*/
+
 /*
 WRONG
 // https://codeforces.com/problemset/problem/1799/D1-2 --1900 --2100
