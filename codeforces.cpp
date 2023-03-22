@@ -1,4 +1,158 @@
-﻿// https://codeforces.com/problemset/problem/1800/B --1000
+﻿// https://codeforces.com/problemset/problem/1800/E1 --1400 -1500
+#include <iostream>
+#include <string>
+int main ()
+{
+  constexpr int alf_cnt = 26;
+  int T, n, k, sc[alf_cnt], tc[alf_cnt];
+  std::string s, t;
+  std::cin >> T;
+  while (T--)
+  {
+    std::cin >> n >> k >> s >> t;
+
+    bool is_same = true;
+    for (int i = 0; i < alf_cnt; ++i)
+      sc[i] = 0, tc[i] = 0;
+    for (int i = 0; i < n; ++i)
+      sc[s[i] - 'a']++, tc[t[i] - 'a']++;
+    for (int i = 0; i < alf_cnt; ++i)
+      if (sc[i] != tc[i])
+      {
+        is_same = false;
+        break;
+      }
+
+    if (!is_same)
+    {
+      std::cout << "NO\n";
+      continue;
+    }
+
+    if (k * 2 <= n)
+    {
+      // std::cout << "YES\n";
+    }
+    else if (k < n)
+    {
+      for (int i = n - k; i < k; ++i)
+        if (s[i] != t[i])
+        {
+          is_same = false;
+          break;
+        }
+    }
+    else
+    {
+      for (int i = 0; i < n; ++i)
+        if (s[i] != t[i])
+        {
+          is_same = false;
+          break;
+        }
+    }
+    std::cout << (is_same ? "YES" : "NO") << std::endl;
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1800/D --1200
+#include <iostream>
+#include <string>
+int main ()
+{
+  int t, n;
+  std::string s;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> s;
+    int ans = n - 1;
+    for (int i = n - 1; i >= 2; i--)
+      if (s[i] == s[i - 2])
+        --ans;
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1800/C2 --1100
+// BEST PRACTICE
+#include <iostream>
+#include <queue>
+int main ()
+{
+  int t, n, s;
+  std::cin >> t;
+  while (t--)
+  {
+    long long ans = 0;
+    std::priority_queue<int> q;
+    std::cin >> n;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> s;
+      if (s)
+        q.push (s);
+      else if (!q.empty ())
+      {
+        ans += q.top ();
+        q.pop ();
+      }
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1800/C --1000 -1100
+#include <iostream>
+#include <vector>
+#include <set>
+#include <algorithm>
+#include <functional>
+int main ()
+{
+  constexpr int max_n = 2e5;
+  int t, n;
+  std::vector<int> s;
+  std::set<int> h;
+  std::vector<std::pair<int, int>> c;
+  s.reserve (max_n);
+  c.reserve (max_n);
+  std::cin >> t;
+  while (t--)
+  {
+    long long ans = 0;
+    std::cin >> n;
+    s.resize (n);
+    c.clear ();
+    h.clear ();
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> s[i];
+      if (s[i]) c.emplace_back (s[i], i);
+      else      h.insert (i);
+    }
+    std::sort (c.begin (), c.end (), std::greater<std::pair<int, int>> ());
+    for (const auto &el : c)
+    {
+      const auto it = h.lower_bound (el.second);
+      if (it != h.end ())
+      {
+        h.erase (it);
+        ans += el.first;
+      }
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1800/B --1000
 #include <iostream>
 #include <algorithm>
 int main ()
@@ -35,6 +189,8 @@ int main ()
     std::cout << ans << std::endl;
   }
 }
+*/
+
 /*
 // https://codeforces.com/problemset/problem/1800/A --800
 #include <iostream>
