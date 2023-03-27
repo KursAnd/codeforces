@@ -1,4 +1,202 @@
-﻿// https://codeforces.com/problemset/problem/1800/E1 --1400 -1500
+﻿// https://codeforces.com/problemset/problem/1800/G --2200
+#include <iostream>
+#include <vector>
+#include <set>
+#include <map>
+#include <queue>
+#include <list>
+int main ()
+{
+  constexpr int inf = 1e9;
+  int t, n, a, b;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    std::vector<std::set<int>> v (n);
+    for (int i = 0; i < n - 1; ++i)
+    {
+      std::cin >> a >> b;
+      a--; b--;
+      v[a].insert (b);
+      v[b].insert (a);
+    }
+    if (n <= 3)
+    {
+      std::cout << "YES\n";
+      continue;
+    }
+
+    std::vector<int> ln (n, inf);
+    ln[0] = 0;
+
+    struct queue_data_t {
+      int current;
+      int previous;
+      int parent;
+      int len;
+    };
+    std::queue<queue_data_t> q;
+    std::list<queue_data_t> q_end;
+    for (const int i : v[0])
+      q.push ({i, 0, i, 1});
+    while (!q.empty ())
+    {
+      const queue_data_t el = q.front (); q.pop ();
+      bool done_smth = false;
+      ln[el.current] = el.len;
+      for (const int i : v[el.current])
+        if (i != el.previous)
+        {
+          done_smth = true;
+          q.push ({i, el.current, el.parent, el.len + 1});
+        }
+      if (!done_smth)
+        q_end.push_back (el);
+    }
+
+    std::vector<std::map<int, int>> vm (n);
+    for (const queue_data_t &el : q_end)
+      vm[el.parent][el.len]++;
+
+    std::map<std::map<int, int>, int> mmi;
+    for (const int i : v[0])
+    {
+      if (mmi.count (vm[i]))
+        mmi.erase (vm[i]);
+      else
+        mmi[vm[i]] = i;
+    }
+
+    if (mmi.empty ())
+    {
+      std::cout << "YES\n";
+    }
+    else
+    {
+
+    }
+  }
+}
+
+/*
+WRONG
+// https://codeforces.com/problemset/problem/1801/A --1600
+#include <iostream>
+#include <vector>
+#include <set>
+int main ()
+{
+  std::set<int> s;
+  std::vector<std::vector<int>> v;
+  int step = 0;
+  constexpr int bits_num = 32;
+  int i[4];
+  for (i[0] = 0; i[0] < bits_num - 3; ++i[0])
+    for (i[1] = i[0] + 1; i[1] < bits_num - 2; ++i[1])
+      for (i[2] = i[1] + 1; i[2] < bits_num - 1; ++i[2])
+        for (i[3] = i[2] + 1; i[3] < bits_num; ++i[3])
+        {
+          constexpr int e_size = 3 * 3 * 3 * 3;
+          const std::vector<int> en3{1, 3, 9, 27};
+          for (int e = 0; e < e_size; ++e)
+          {
+            ++step;
+            std::vector<int> en (4);
+            for (int en_i = 0; en_i < 4; ++en_i)
+              en[en_i] = (e / en3[en_i]) % 3;
+
+            std::vector<int> ad (3, 0);
+            for (int ad_i = 0; ad_i < 3; ++ad_i)
+              for (int en_i = 0; en_i < 4; ++en_i)
+                if (en[en_i] != ad_i)
+                  ad[ad_i] |= 1 << i[en_i];
+
+            bool ok = true;
+            for (int ad_i = 0; ad_i < 3; ++ad_i)
+              if (s.count (ad[ad_i]))
+              {
+                ok = false;
+                break;
+              }
+            if (!ok)
+              continue;
+            for (int ad_i = 0; ad_i < 3; ++ad_i)
+              s.insert (ad[ad_i]);
+            v.emplace_back (ad);
+            constexpr int stop_size = 200 * 200 / 4;
+            if (v.size () == stop_size)
+              break;
+          }
+        }
+  int o = 0;
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1800/F --1900
+#include <iostream>
+#include <array>
+#include <string>
+#include <map>
+int main ()
+{
+  constexpr int alf_cnt = 26;
+  int n;
+  std::string s;
+  std::array<int, alf_cnt> cnt;
+  std::array<std::map<int, int>, alf_cnt> m;
+
+  std::cin >> n;
+  for (int i = 0; i < n; ++i)
+  {
+    for (int &el : cnt) el = 0;
+
+    std::cin >> s;
+    for (const char c : s) cnt[c - 'a']++;
+
+    int code = 0;
+    for (int j = 0; j < alf_cnt; ++j)
+      if (cnt[j] % 2)
+        code |= 1 << j;
+
+    for (int j = 0; j < alf_cnt; ++j)
+      if (cnt[j] == 0)
+        m[j][code]++;
+  }
+
+  auto gen_main_mask = [alf_cnt]()
+  {
+    int mask = 0;
+    for (int i = 0; i < alf_cnt; ++i)
+      mask |= 1 << i;
+    return mask;
+  };
+  const int main_mask = gen_main_mask ();
+  std::array<int, alf_cnt> reverce_masks;
+  for (int i = 0; i < alf_cnt; ++i)
+    reverce_masks[i] = main_mask ^ (1 << i);
+
+  long long ans = 0;
+  for (int i = 0; i < alf_cnt; ++i)
+  {
+    for (const auto &el : m[i])
+    {
+      const int code = el.first ^ reverce_masks[i];
+      const auto it = m[i].find (code);
+      if (it == m[i].end ())
+        continue;
+      const int cnt1 = el.second;
+      const int cnt2 = it->second;
+      ans += 1LL * cnt1 * cnt2;
+    }
+  }
+  std::cout << ans / 2 << std::endl;
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1800/E1 --1400 -1500
 #include <iostream>
 #include <string>
 int main ()
@@ -54,6 +252,7 @@ int main ()
     std::cout << (is_same ? "YES" : "NO") << std::endl;
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1800/D --1200
