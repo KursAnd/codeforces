@@ -3,6 +3,89 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <algorithm>
+
+constexpr int inf = 1e9;
+constexpr int max_n = 2e5;
+constexpr double hash_leef = 179.;
+constexpr double hash_add = 46.;
+
+std::vector<std::set<int>> v;
+std::vector<double> hash;
+std::vector<bool> sim;
+
+double get_hash_sim (const int root)
+{
+  hash[root] = -inf;
+  std::vector<double> hash_leafs;
+  hash_leafs.reserve (v[root].size ());
+  std::map<double, int> hash_map;
+  for (const int leaf : v[root])
+    if (hash[leaf] != -inf)
+    {
+      if (v[leaf].size () == 1)
+      {
+        hash[leaf] = hash_leef;
+        sim[leaf] = true;
+      }
+      else
+        hash[leaf] = get_hash_sim (leaf);
+      hash_leafs.push_back (hash[leaf]);
+
+      const auto it = hash_map.insert ({hash[leaf], leaf});
+      if (!it.second)
+        hash_map.erase (it.first);
+    }
+
+  if (hash_map.empty ())
+    sim[root] = true;
+  else if (hash_map.size () == 1)
+    sim[root] = sim[hash_map.begin ()->second];
+  else
+    sim[root] = false;
+
+  double new_hash = hash_add;
+  std::sort (hash_leafs.begin (), hash_leafs.end ());
+  for (const double hash_leaf : hash_leafs)
+    new_hash += std::log (hash_leaf);
+  hash[root] = new_hash;
+
+  return new_hash;
+}
+
+int main ()
+{
+  int t, n, a, b;
+  hash.reserve (max_n);
+  sim.reserve (max_n);
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    v.clear (); v.resize (n);
+    for (int i = 0; i < n - 1; ++i)
+    {
+      std::cin >> a >> b;
+      a--; b--;
+      v[a].insert (b);
+      v[b].insert (a);
+    }
+
+    hash.clear (); hash.resize (n, inf);
+    sim.clear (); sim.resize (n, false);
+
+    get_hash_sim (0);
+    std::cout << (sim[0] ? "YES" : "NO") << std::endl;
+  }
+}
+
+/*
+WRONG
+// https://codeforces.com/problemset/problem/1800/G --2200
+#include <iostream>
+#include <vector>
+#include <set>
+#include <map>
 #include <queue>
 #include <list>
 int main ()
@@ -21,63 +104,84 @@ int main ()
       v[a].insert (b);
       v[b].insert (a);
     }
-    if (n <= 3)
-    {
-      std::cout << "YES\n";
-      continue;
-    }
+    // if (n <= 3)
+    // {
+    //   std::cout << "YES\n";
+    //   continue;
+    // }
 
     std::vector<int> ln (n, inf);
     ln[0] = 0;
 
     struct queue_data_t {
       int current;
-      int previous;
-      int parent;
       int len;
     };
     std::queue<queue_data_t> q;
     std::list<queue_data_t> q_end;
     for (const int i : v[0])
-      q.push ({i, 0, i, 1});
+      q.push ({i, 1});
     while (!q.empty ())
     {
       const queue_data_t el = q.front (); q.pop ();
-      bool done_smth = false;
+      const size_t old_q_size = q.size ();
       ln[el.current] = el.len;
       for (const int i : v[el.current])
-        if (i != el.previous)
-        {
-          done_smth = true;
-          q.push ({i, el.current, el.parent, el.len + 1});
-        }
-      if (!done_smth)
+        if (ln[i] == inf)
+          q.push ({i, el.len + 1});
+      if (old_q_size == q.size ())
         q_end.push_back (el);
     }
 
     std::vector<std::map<int, int>> vm (n);
     for (const queue_data_t &el : q_end)
-      vm[el.parent][el.len]++;
-
-    std::map<std::map<int, int>, int> mmi;
-    for (const int i : v[0])
     {
-      if (mmi.count (vm[i]))
-        mmi.erase (vm[i]);
+      int cur = el.current;
+      const int len = el.len;
+      while (cur != 0)
+      {
+        vm[cur][len]++;
+        for (const int i : v[cur])
+          if (ln[i] < ln[cur])
+          {
+            cur = i;
+            break;
+          }
+      }
+    }
+
+    int start = 0, previous = 0;
+
+    while (1)
+    {
+      std::map<std::map<int, int>, int> mmi;
+      for (const int cur : v[start])
+        if (cur != previous)
+        {
+          const auto it = mmi.insert ({vm[cur], cur});
+          if (!it.second)
+            mmi.erase (it.first);
+        }
+
+      if (mmi.empty ())
+      {
+        std::cout << "YES\n";
+        break;
+      }
+      else if (mmi.size () == 1)
+      {
+        previous = start;
+        start = mmi.begin ()->second;
+      }
       else
-        mmi[vm[i]] = i;
-    }
-
-    if (mmi.empty ())
-    {
-      std::cout << "YES\n";
-    }
-    else
-    {
-
+      {
+        std::cout << "NO\n";
+        break;
+      }
     }
   }
 }
+*/
 
 /*
 WRONG
