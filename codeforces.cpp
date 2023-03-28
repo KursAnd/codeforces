@@ -4,6 +4,7 @@
 #include <set>
 #include <map>
 #include <algorithm>
+#include <math.h>
 
 constexpr int inf = 1e9;
 constexpr int max_n = 2e5;
@@ -47,7 +48,13 @@ double get_hash_sim (const int root)
   double new_hash = hash_add;
   std::sort (hash_leafs.begin (), hash_leafs.end ());
   for (const double hash_leaf : hash_leafs)
-    new_hash += std::log (hash_leaf);
+  {
+    const double f = std::sin (hash_leaf);
+    if (f == 0.)
+      new_hash += 1.14;
+    else
+      new_hash += f + 1/f;
+  }
   hash[root] = new_hash;
 
   return new_hash;
