@@ -1,4 +1,76 @@
-﻿// https://codeforces.com/problemset/problem/1800/G --2200
+﻿// https://codeforces.com/problemset/problem/1801/B --1800
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <set>
+int main ()
+{
+  constexpr int max_n = 5e5;
+  int t, n;
+  struct data_t { int a, b; };
+  std::vector<data_t> v;
+  v.reserve (max_n);
+  std::cin >> t;
+  auto comp = [](const data_t &l, const data_t &r) { return l.a < r.a || (l.a == r.a && l.b > r.b); };
+  while (t--)
+  {
+    std::cin >> n;
+    v.resize (n);
+    for (int i = 0; i < n; ++i)
+      std::cin >> v[i].a >> v[i].b;
+    std::sort (v.begin (), v.end (), comp);
+    std::multiset<int> s;
+    int ans = 1e9;
+    for (const data_t &el : v)
+    {
+      const int i = std::lower_bound (b.begin (), b.end (), el, comp) - b.begin ();
+      const int l = std::max (0, i - 2);
+      const int r = std::min (n - 1, i + 1);
+      for (int j = l; j <= r; ++j)
+        if (el.i != b[j].i)
+          ans = std::min (ans, std::abs (el.val - b[j].val));
+    }
+    std::cout << ans << std::endl;
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1801/A --1600
+#include <iostream>
+int main ()
+{
+  constexpr int big_add = 1 << 9; // 512 > 200 * 2
+  int t, n, m;
+  long long a[200][200];
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> m;
+    for (int i = 0; i < n; i += 2)
+    {
+      int k = big_add * i / 2;
+      for (int j = 0; j < m; j += 2)
+      {
+        a[i][j] = k++;
+        if (i + 1 < n) a[i + 1][j] = k++; else ++k;
+        if (j + 1 < m) a[i][j + 1] = k++; else ++k;
+        if (i + 1 < n && j + 1 < m) a[i + 1][j + 1] = k++; else ++k;
+      }
+    }
+    std::cout << n * m << std::endl;
+    for (int i = 0; i < n; ++i, std::cout << std::endl)
+      for (int j = 0; j < m; ++j)
+        std::cout << a[i][j] << " ";
+    // std::cout << n * m << std::endl;
+    // for (int i = 1; i < n; ++i, std::cout << std::endl)
+    //   for (int j = 1; j < m; ++j)
+    //     std::cout << (a[i][j] ^ a[i][j - 1] ^ a[i - 1][j] ^ a[i - 1][j - 1]) << " ";
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1800/G --2200
 #include <iostream>
 #include <vector>
 #include <set>
@@ -85,6 +157,7 @@ int main ()
     std::cout << (sim[0] ? "YES" : "NO") << std::endl;
   }
 }
+*/
 
 /*
 WRONG
