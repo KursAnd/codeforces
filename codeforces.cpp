@@ -1,17 +1,187 @@
-﻿// https://codeforces.com/problemset/problem/1801/B --1800
+﻿// https://codeforces.com/problemset/problem/1810/D --1700
+#include <iostream>
+#include <algorithm>
+int main ()
+{
+  constexpr long long inf = 1e18;
+  long long t, q, a, b, n, type;
+  std::cin >> t;
+  auto div = [](const long long a, const long long b) { return a / b + (a % b ? 1 : 0); };
+  while (t--)
+  {
+    std::cin >> q;
+    long long h_max = inf, h_min = 0;
+    while (q--)
+    {
+      std::cin >> type >> a >> b;
+      if (type == 1)
+      {
+        std::cin >> n;
+        const long long new_max = (a - b) * (n - 1) + a;
+        const long long new_min = n > 1 ? (a - b) * (n - 2) + a + 1 : h_min;
+        bool updated = false;
+        if (h_min <= new_max && new_min <= h_max)
+        {
+          h_max = std::min (h_max, new_max);
+          h_min = std::max (h_min, new_min);
+          updated = true;
+        }
+        std::cout << (updated ? "1 " : "0 ");
+      }
+      else
+      {
+        const long long n_min = h_min >= a
+                              ? div (h_min - a, a - b) + 1
+                              : 1;
+        const long long n_max = h_max >= a
+                              ? div (h_max - a, a - b) + 1
+                              : 1;
+        std::cout << (n_min == n_max ? n_min : -1) << " ";
+      }
+      std::cout << std::endl;
+    }
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1804/B --1000
+#include <iostream>
+int main ()
+{
+  int T, n, k, d, w, t;
+  std::cin >> T;
+  while (T--)
+  {
+    std::cin >> n >> k >> d >> w;
+    int ans = 0, doses = 0, border = -1;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> t;
+      if (t > border)
+        doses = 0;
+
+      if (doses > 0)
+        --doses;
+      else
+      {
+        ++ans;
+        border = t + w + d;
+        doses = k - 1;
+      }
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1804/A --800
+#include <iostream>
+#include <algorithm>
+int main ()
+{
+  int t, a, b, ans;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> a >> b;
+    a = std::abs (a);
+    b = std::abs (b);
+    ans = std::min (a, b) * 2;
+    if (a != b)
+      ans += std::abs (a - b) * 2 - 1;
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1802/B --100
+#include <iostream>
+#include <algorithm>
+int main ()
+{
+  int t, n, b;
+  std::cin >> t;
+  while (t--)
+  {
+    int ans = 0, x = 0, empty = 0;
+    std::cin >> n;
+    while (n--)
+    {
+      std::cin >> b;
+      if (b == 1)
+      {
+        ++x;
+        if (empty) --empty;
+        else ++ans;
+      }
+      else
+      {
+        const int new_ans = x / 2 + (x > 0);
+        empty = std::max (ans - new_ans, 0);
+        ans = std::max (ans, new_ans);
+      }
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1802/A --800
+#include <iostream>
+#include <algorithm>
+#include <functional>
+int main ()
+{
+  constexpr int max_n = 100;
+  int t, n, b[max_n], c[max_n];
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    for (int i = 0; i < max_n; ++i) c[i] = 0;
+    for (int i = 0; i < n; ++i) std::cin >> b[i], c[std::abs (b[i]) - 1]++;
+
+    std::sort (b, b + n, std::greater<int> ());
+    int ans = 0;
+    for (int i = 0; i < n; ++i)
+    {
+      ans += b[i] > 0 ? 1 : -1;
+      std::cout << ans << " \n"[i == n - 1];
+    }
+    int cnt = 0;
+    for (int i = 0; i < max_n; ++i)
+      if (c[i] == 1)
+        ++cnt;
+      else if (c[i] == 2)
+        std::cout << "1 0 ";
+    for (int i = 1; i <= cnt; ++i)
+      std::cout << i << " ";
+    std::cout << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1801/B --1800
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <set>
 int main ()
 {
+  constexpr int inf = 1e9;
   constexpr int max_n = 5e5;
   int t, n;
   struct data_t { int a, b; };
   std::vector<data_t> v;
   v.reserve (max_n);
   std::cin >> t;
-  auto comp = [](const data_t &l, const data_t &r) { return l.a < r.a || (l.a == r.a && l.b > r.b); };
+  auto comp = [](const data_t &l, const data_t &r) { return l.b > r.b || (l.b == r.b && l.a < r.a); };
+  auto set_min = [](int &res, const int val) { if (val < res) res = val; };
+  auto set_max = [](int &res, const int val) { if (val > res) res = val; };
   while (t--)
   {
     std::cin >> n;
@@ -20,19 +190,24 @@ int main ()
       std::cin >> v[i].a >> v[i].b;
     std::sort (v.begin (), v.end (), comp);
     std::multiset<int> s;
-    int ans = 1e9;
-    for (const data_t &el : v)
+    int ans = inf;
+    int max_a = -inf;
+    for (int i = 0; i < n; ++i) s.insert (v[i].a);
+    for (int i = 0; i < n; ++i)
     {
-      const int i = std::lower_bound (b.begin (), b.end (), el, comp) - b.begin ();
-      const int l = std::max (0, i - 2);
-      const int r = std::min (n - 1, i + 1);
-      for (int j = l; j <= r; ++j)
-        if (el.i != b[j].i)
-          ans = std::min (ans, std::abs (el.val - b[j].val));
+      s.erase (s.find (v[i].a));
+      set_min (ans, abs (max_a - v[i].b));
+      const auto it = s.lower_bound (v[i].b);
+      if (it != s.end () && *it >= max_a)
+        set_min (ans, std::abs (*it - v[i].b));
+      if (it != s.begin () && *std::prev (it) >= max_a)
+        set_min (ans, std::abs (*std::prev (it) - v[i].b));
+      set_max (max_a, v[i].a);
     }
     std::cout << ans << std::endl;
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1801/A --1600
