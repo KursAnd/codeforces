@@ -1,4 +1,88 @@
-﻿// https://codeforces.com/problemset/problem/1810/D --1700
+﻿// https://codeforces.com/problemset/problem/1811/D --1600
+#include <iostream>
+int main ()
+{
+  int t, n, x, y;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> x >> y;
+
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1811/E --1500
+#include <iostream>
+int main ()
+{
+  int t;
+  long long mult[15];
+  mult[0] = 1;
+  for (int i = 1; i < 15; ++i)
+    mult[i] = mult[i - 1] * 10;
+  std::cin >> t;
+  while (t--)
+  {
+    long long k, ans = 0;
+    std::cin >> k;
+    int size = 0;
+    while (k > 0)
+    {
+      int val = k % 9;
+      if (val >= 4)
+        ++val;
+      ans += mult[size++] * val;
+      k /= 9;
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1810/C --1300
+#include <iostream>
+#include <set>
+#include <algorithm>
+int main ()
+{
+  constexpr int max_n = 1e5;
+  int t, n, c, d, a;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> c >> d;
+    long long ans = 0;
+    std::set<int> s;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> a;
+      --a;
+      const auto it_insert = s.insert (a);
+      if (!it_insert.second)
+        ans += c;
+    }
+    if (s.insert(0).second)
+      ans += d;
+    long long ans_add = 1e18;
+    int cnt_to_delet = s.size ();
+    int cnt_was = 0;
+    for (const auto &el : s)
+    {
+      const int cnt_to_add = el - cnt_was;
+      cnt_to_delet--;
+      cnt_was++;
+      ans_add = std::min (ans_add, 1LL * cnt_to_delet * c + 1LL * cnt_to_add * d);
+    }
+    ans += ans_add;
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1810/D --1700
 #include <iostream>
 #include <algorithm>
 int main ()
@@ -42,6 +126,7 @@ int main ()
     }
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1804/B --1000
