@@ -1,15 +1,158 @@
-﻿// https://codeforces.com/problemset/problem/1811/D --1600
+﻿// https://codeforces.com/problemset/problem/1814/C --1500
 #include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
 int main ()
 {
-  int t, n, x, y;
+  int t, n, s[2];
+  constexpr int max_n = 2e5 + 1;
+  std::vector<std::pair<int, int>> r; r.reserve (max_n);
+  std::vector<int> a, b; a.reserve (max_n); b.reserve (max_n);
   std::cin >> t;
   while (t--)
   {
-    std::cin >> n >> x >> y;
-
+    std::cin >> n >> s[0] >> s[1];
+    r.resize (n);
+    for (int i = 0; i < n; ++i)
+      std::cin >> r[i].first, r[i].second = i + 1;
+    std::sort (r.begin (), r.end (), std::greater<std::pair<int, int>> ());
+    int ac = 0, bc = 0;
+    a.clear (); b.clear ();
+    for (int i = 0; i < n; ++i)
+    {
+      if (ac + s[0] < bc + s[1])
+      {
+        ac += s[0];
+        a.push_back (r[i].second);
+      }
+      else
+      {
+        bc += s[1];
+        b.push_back (r[i].second);
+      }
+    }
+    std::cout << a.size () << " ";
+    for (const int el : a) std::cout << el << " ";
+    std::cout << std::endl << b.size () << " ";
+    for (const int el : b) std::cout << el << " ";
+    std::cout << std::endl;
   }
 }
+
+/*
+// https://codeforces.com/problemset/problem/1815/A --1300
+#include <iostream>
+int t, n;
+long long a[300002];
+int main ()
+{
+  a[0] = 0;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    for (int i = 1; i <= n; ++i)
+      std::cin >> a[i];
+
+    for (int i = 1; i < n; ++i)
+      {
+        long long d = a[i - 1] - a[i];
+        a[i] += d;
+        a[i + 1] += d;
+      }
+    std::cout << (n % 2 == 1 || a[n - 1] <= a[n] ? "YES" : "NO") << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1816/A --800
+#include <iostream>
+#include <deque>
+int main ()
+{
+  std::deque<int>::;
+  int t, a, b;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> a >> b;
+    if (a == 1 || b == 1)
+    {
+      std::cout << 1 << std::endl
+                << a << " " << b << std::endl;
+    }
+    else
+    {
+      std::cout << 2 << std::endl
+                << a - 1 << " " << 1 << std::endl
+                << a << " " << b << std::endl;
+    }
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1816/B --1000
+#include <iostream>
+int main ()
+{
+  int t, n, a[2][100000];
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    int k = n * 2;
+    a[1][n - 1] = k--;
+    a[0][0] = k--;
+    for (int i = 0; i < n / 2 - 1; ++i)
+      a[1][i * 2 + 1] = k--,
+      a[0][i * 2 + 2] = k--;
+    for (int i = 0; i < n / 2; ++i)
+      a[1][i * 2] = k--,
+      a[0][i * 2 + 1] = k--;
+    for (int j = 0; j < 2; j++, std::cout << "\n")
+      for (int i = 0; i < n; ++i)
+        std::cout << a[j][i] << " ";
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1811/D --1600
+#include <iostream>
+int main ()
+{
+  constexpr int fib_boarder = 46;
+  int t, n, x, y;
+  std::cin >> t;
+  int fib[fib_boarder];
+  fib[0] = 1;
+  fib[1] = 1;
+  for (int i = 2; i < fib_boarder; ++i)
+    fib[i] = fib[i - 1] + fib[i - 2];
+  while (t--)
+  {
+    std::cin >> n >> x >> y;
+    
+    bool ok = true;
+    while (n > 0)
+    {
+      int temp_x = x;
+      x = y > fib[n] ? y - fib[n] : y;
+      y = fib[n] - temp_x + 1;
+      --n;
+      if (x > fib[n] || y > fib[n + 1])
+      {
+        ok = false;
+        break;
+      }
+    }
+    std::cout << (ok ? "YES" : "NO") << std::endl;
+  }
+}
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1811/E --1500
