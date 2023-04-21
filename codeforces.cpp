@@ -1,4 +1,152 @@
-﻿// https://codeforces.com/problemset/problem/1814/C --1500
+﻿#define fastIO std::cin.tie (0); std::cout.tie (0); std::ios_base::sync_with_stdio (0);
+
+/*
+// https://codeforces.com/problemset/problem/1819/A --1300
+#include <iostream>
+constexpr int inf = 2e9, max_n = 2e5;
+int t, n, a[max_n], b[max_n];
+int main ()
+{
+#ifdef KURS_DEBUG
+  auto start = std::chrono::high_resolution_clock::now ();
+#endif
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    for (int i = 0; i < n; ++i) b[i] = 0;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> a[i];
+      if (a[i] < n) b[a[i]] += 1;
+    }
+    if (b[0] == 0)
+      std::cout << "Yes\n";
+    else
+    {
+      int filled_i = 0;
+      while (filled_i < n && b[filled_i] > 0)
+        ++filled_i;
+      if (filled_i == n)
+        std::cout << "No\n";
+      else if (filled_i == n - 1 || b[filled_i + 1] <= 1)
+        std::cout << "Yes\n";
+      else
+      {
+        int need_del = b[filled_i + 1];
+        for (int i = 0; i < n; ++i)
+          if (a[i] == filled_i + 1)
+            need_del--;
+          else if (need_del == b[filled_i + 1] || need_del == 0)
+            continue;
+          else
+            b[a[i]]--;
+        int ok = true;
+        for (int i = 0; i < filled_i; ++i)
+          if (b[i] == 0)
+          {
+            ok = false;
+            break;
+          }
+        std::cout << (ok ? "Yes\n" : "No\n");
+      }
+    }
+  }
+#ifdef KURS_DEBUG
+  auto end = std::chrono::high_resolution_clock::now ();
+  std::cerr << "Execution time: "
+    << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count ()
+    << " ms" << std::endl;
+#endif
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1820/A --800
+#include <iostream>
+#include <string>
+int main ()
+{
+  int t;
+  std::string s;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> s;
+    int ans = 0;
+    if (s.size () == 1 && s[0] == '^')
+      ++ans;
+    if (s.front () == '_') ++ans;
+    if (s.back () == '_') ++ans;
+    for (int i = 1; i < s.size (); ++i)
+      if (s[i] == '_' && s[i - 1] == '_')
+        ++ans;
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1820/B --1100
+#include <iostream>
+#include <string>
+int main ()
+{
+  int t;
+  std::string s;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> s;
+    const int n = s.size ();
+    if (s.find ('0') == std::string::npos)
+    {
+      std::cout << 1LL * n * n << std::endl;
+    }
+    else
+    {
+      s += s;
+      int cnt = 0, mx_cnt = 0;
+      for (int i = 0; i < s.size (); ++i)
+        if (s[i] == '1')
+        {
+          ++cnt;
+        }
+        else
+        {
+          if (mx_cnt < cnt)
+            mx_cnt = cnt;
+          cnt = 0;
+        }
+      if (mx_cnt < cnt)
+        mx_cnt = cnt;
+      std::cout << 1LL * ((mx_cnt + 1) / 2) * ((mx_cnt + 2) / 2) << std::endl;
+    }
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1814/B --1700
+#include <iostream>
+#include <algorithm>
+int main ()
+{
+  int t, a, b;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> a >> b;
+    int ans = a + b;
+    for (int i = 1; i <= std::min (int (1e5), std::max (a, b)); ++i)
+      ans = std::min (ans, (a + i - 1) / i + (b + i - 1) / i + i - 1);
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1814/C --1500
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -39,6 +187,7 @@ int main ()
     std::cout << std::endl;
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1815/A --1300
