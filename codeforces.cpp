@@ -1,4 +1,389 @@
-﻿#define fastIO std::cin.tie (0); std::cout.tie (0); std::ios_base::sync_with_stdio (0);
+﻿/*
+#define fastIO std::cin.tie (0); std::cout.tie (0); std::ios_base::sync_with_stdio (0)
+#include <iostream>
+int main ()
+{
+  fastIO;
+  int t;
+  std::cin >> t;
+  while (t--)
+  {
+  }
+}
+*/
+
+// https://codeforces.com/problemset/problem/1808/C --1900
+#include <iostream>
+#include <string>
+#include <algorithm>
+int main ()
+{
+  long long t, l, r;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> l >> r;
+    std::string ans_end;
+    do
+    {
+      const int l10 = l % 10,
+                r10 = r % 10;
+      if (l10 == r10)
+      {
+        ans_end += '0' + l10;
+        l /= 10;
+        r /= 10;
+        continue;
+      }
+    }
+    while (false);
+    std::reverse (ans_end.begin (), ans_end.end ());
+
+    long long ans_num = l;
+    int ans = 10;
+    for (long long i = l; i <= r; ++i)
+    {
+      long long num = i;
+      int max = -1, min = 10, temp;
+      while (num > 0)
+      {
+        temp = num % 10;
+        num /= 10;
+        if (max < temp) max = temp;
+        if (min > temp) min = temp;
+      }
+      if (ans > max - min) ans = max - min, ans_num = i;
+      if (ans == 0) break;
+    }
+    std::cout << ans_num << ans_end << std::endl;
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1808/B --1200
+#include <iostream>
+#include <vector>
+#include <algorithm>
+int main ()
+{
+  int t, n, m;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> m;
+    std::vector<std::vector<int>> v (m, std::vector<int> (n));
+    for (int i = 0; i < n; ++i)
+      for (int j = 0; j < m; ++j)
+        std::cin >> v[j][i];
+    long long ans = 0;
+    for (int j = 0; j < m; ++j)
+    {
+      std::sort (v[j].begin (), v[j].end ());
+      int mult = 1 - n;
+      for (const int el : v[j])
+      {
+        ans += 1LL * mult * el;
+        mult += 2;
+      }
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1808/A --900
+#include <iostream>
+int main ()
+{
+  int t, l, r;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> l >> r;
+    int ans = 0, ans_num = l;
+    for (int i = l; i <= r; ++i)
+    {
+      int max = -1, min = 10, num = i, temp;
+      while (num > 0)
+      {
+        temp = num % 10;
+        num /= 10;
+        if (max < temp) max = temp;
+        if (min > temp) min = temp;
+      }
+      if (ans < max - min) ans = max - min, ans_num = i;
+      if (ans == 9) break;
+    }
+    std::cout << ans_num << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1809/A --800
+#include <iostream>
+#include <map>
+int main ()
+{
+  int t;
+  char c;
+  std::cin >> t;
+  while (t--)
+  {
+    std::map<char, int> m;
+    for (int i = 0; i < 4; ++i)
+      std::cin >> c, m[c]++;
+    if (m.size () == 1)
+      std::cout << "-1\n";
+    else if (m.size () == 2 && (m.begin ()->second == 1 || m.begin ()->second == 3))
+      std::cout << "6\n";
+    else
+      std::cout << "4\n";
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1809/B --1000
+#define fastIO std::cin.tie (0); std::cout.tie (0); std::ios_base::sync_with_stdio (0)
+#include <iostream>
+int main ()
+{
+  fastIO;
+  int t;
+  long long n, r, l, m;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    l = -1; r = 1e9;
+    while (r - l > 1)
+    {
+      m = r + (l - r) / 2;
+      if (m * m >= n) r = m;
+      else            l = m;
+    }
+    std::cout << r - 1 << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1809/C --1500
+#include <iostream>
+#include <functional>
+int main ()
+{
+  int t, n, k;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> k;
+    std::function<void()> solve = [&n, &k, &solve]()
+    {
+      if (k <= n)
+      {
+        for (int i = 1; i <= k - 1; ++i) std::cout << "-1 ";
+        if (k > 0) std::cout << "100 ";
+        if (k < n) std::cout << "-101 ";
+        for (int i = k + 2; i <= n; ++i) std::cout << "-1 ";
+      }
+      else
+      {
+        std::cout << "1000 ";
+        k -= n--;
+        solve ();
+      }
+    };
+    solve ();
+    std::cout << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1809/D --1800
+#include <iostream>
+#include <string>
+#include <vector>
+int main ()
+{
+  constexpr int max_n = 3e5 + 5;
+  int t;
+  std::string s; s.reserve (max_n);
+  std::vector<int> l, r; l.reserve (max_n); r.reserve (max_n);
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> s;
+    const int n = s.size ();
+    l.resize (n + 1); r.resize (n + 1);
+    l[0] = 0; r[n] = 0;
+    for (int i = 0; i < n; ++i)
+      l[i + 1] = l[i] + (s[i] == '1');
+    for (int i = n - 1; i >= 0; --i)
+      r[i] = r[i + 1] + (s[i] == '0');
+    long long ans = 1e18;
+    for (int i = 0; i <= n; ++i)
+    {
+      long long temp = (l[i] + r[i]) * ((long long)(1e12) + 1);
+      if (i != n && ((i != 0 && s[i - 1] == '1' && s[i] == '0') || (i < n - 1 && s[i] == '1' && s[i + 1] == '0')))
+        --temp;
+      if (ans > temp)
+        ans = temp;
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1810/A -- 800
+#include <iostream>
+int main ()
+{
+  int t, n, a;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    bool yes = false;
+    for (int i = 1; i <= n; ++i)
+    {
+      std::cin >> a;
+      if (a <= i)
+        yes = true;
+    }
+    std::cout << (yes ? "YES\n" : "NO\n");
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1810/B --800
+#include <iostream>
+#include <deque>
+int main ()
+{
+  int t, n;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    if (n % 2 == 0)
+      std::cout << "-1\n";
+    else
+    {
+      std::deque<int> d;
+      while (n > 1)
+      {
+        if ((n >> 1) % 2)
+        {
+          d.push_front (2);
+          n >>= 1;
+        }
+        else
+        {
+          d.push_front (1);
+          n = (n >> 1) + 1;
+        }
+      }
+      std::cout << d.size ();
+      for (const int el : d)
+        std::cout << " " << el;
+      std::cout << std::endl;
+    }
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1811/A --800
+#include <iostream>
+int main ()
+{
+  int t, n;
+  char d, c;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> d;
+    bool d_was_printed = false;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> c;
+      if (!d_was_printed && c < d)
+      {
+        std::cout << d;
+        d_was_printed = true;
+      }
+      std::cout << c;
+    }
+    if (!d_was_printed)
+      std::cout << d;
+    std::cout << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1811/B --1000
+#include <iostream>
+#include <algorithm>
+int main ()
+{
+  int t, n, x1, x2, y1, y2;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> x1 >> y1 >> x2 >> y2;
+    if (x1 > n / 2) x1 = n - x1 + 1;
+    if (y1 > n / 2) y1 = n - y1 + 1;
+    if (x2 > n / 2) x2 = n - x2 + 1;
+    if (y2 > n / 2) y2 = n - y2 + 1;
+    n >>= 1;
+    std::cout << std::abs (std::min (x1, y1) - std::min (x2, y2)) << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/page/1 --1100
+#include <iostream>
+#include <algorithm>
+int main ()
+{
+  constexpr int max_n = 2e5;
+  int t, n, a[max_n];
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n;
+    for (int i = 0; i < n - 1; ++i) std::cin >> a[i];
+    a[n - 1] = a[n - 2];
+    for (int i = n - 2; i > 0; --i)
+      a[i] = std::min (a[i], a[i - 1]);
+    for (int i = 0; i < n; ++i)
+      std::cout << a[i] << " \n"[i == n - 1];
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1814/A --800
+#include <iostream>
+int main ()
+{
+  long long t, n, k;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> k;
+    std::cout << (n % 2 == 0 || (k % 2 != 0 && k <= n) ? "YES\n" : "NO\n");
+  }
+}
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1819/A --1300
