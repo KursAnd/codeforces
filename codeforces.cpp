@@ -4,14 +4,243 @@
 int main ()
 {
   fastIO;
-  int t;
-  std::cin >> t;
-  while (t--)
+  int _t;
+  std::cin >> _t;
+  while (_t--)
   {
   }
 }
 */
 
+// https://codeforces.com/problemset/problem/1822/F --1700
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+int main ()
+{
+  int _t, n, k, c, _v, _w;
+  std::cin >> _t;
+  while (_t--)
+  {
+    std::cin >> n >> k >> c;
+    std::vector<std::vector<int>> v (n);
+    for (int i = 1; i < n; ++i)
+    {
+      std::cin >> _v >> _w;
+      _v--; _w--;
+      v[_v].push_back (_w);
+      v[_w].push_back (_v);
+    }
+    std::vector<int> len (n, -1);
+    struct data_t {
+      int id, val;
+      data_t (const int id, const int val) : id (id), val (val) {}
+    };
+    std::queue<data_t> q;
+    q.emplace (0, 0);
+    while (!q.empty ())
+    {
+      const int cur = q.front ().id;
+      const int val = q.front ().val;
+      q.pop ();
+      len[cur] = val;
+      for (const int next : v[cur])
+      {
+        if (len[next] >= 0)
+          continue;
+        q.emplace (next, val + 1);
+      }
+    }
+    if (c >= k)
+    {
+      const int ans = *std::max_element (len.begin (), len.end ());
+      std::cout << 1LL * ans * k << std::endl;
+    }
+    else
+    {
+      const int cur = 0;
+      if (v.size () > 2)
+      {
+        std::partial_sort (v[cur].begin (), v[cur].begin () + 2, v[cur].end (),
+          [&len, &cur](const int a, const int b)
+          {
+            if (a == cur) return false;
+            if (b == cur) return true;
+            return len[a] > len[b];
+          }
+        );
+      }
+      long long ans = 1LL * (v[cur][0] + v[cur][1]) * k;
+      std::cout << 1LL * len[0] * k + 1LL * len[1] * (k - c) << std::endl;
+    }
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1822/G1 --1700--2200
+#include <iostream>
+#include <vector>
+#include <algorithm>
+int main ()
+{
+  int _t, n, a;
+  std::cin >> _t;
+  while (_t--)
+  {
+    long long ans = 0;
+    std::cin >> n;
+    std::vector<int> _v (n);
+    for (int &a : _v) std::cin >> a;
+    std::sort (_v.begin (), _v.end ());
+    struct data_t {
+      int val, cnt;
+      data_t (const int val, const int cnt) : val (val), cnt (cnt) {}
+      bool operator<(const data_t &oth) { return val < oth.val; }
+    };
+    std::vector<data_t> v;
+    for (const int a : _v)
+    {
+      if (v.empty () || v.back ().val != a) v.emplace_back (a, 1);
+      else v.back ().cnt++;
+    }
+
+    for (const auto &el : v)
+    {
+      ans += 1LL * el.cnt * (el.cnt - 1) * (el.cnt - 2);
+      int b = 2;
+      while (true)
+      {
+        if (1LL * el.val * b * b > v.back ().val) break;
+        const int j = std::lower_bound (v.begin (), v.end (), data_t{el.val * b, -1}) - v.begin ();
+        if (j == v.size ()) break;
+        if (v[j].val % el.val != 0)
+        {
+          b = v[j].val / el.val + 1;
+          continue;
+        }
+        b = v[j].val / el.val;
+        if (1LL * el.val * b * b > v.back ().val) break;
+        const int k = std::lower_bound (v.begin (), v.end (), data_t{el.val * b * b, -1}) - v.begin ();
+        if (v[j].val * b++ != v[k].val) continue;
+        ans += 1LL * el.cnt * v[j].cnt * v[k].cnt;
+      }
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1823/A --800
+#include <iostream>
+int main ()
+{
+  int t, n, k;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> k;
+    bool ok = false;
+    for (int i = 0;; ++i)
+    {
+      const int j = n - i;
+      if (j < i) break;
+      if (i * (i - 1) / 2 + j * (j - 1) / 2 == k)
+      {
+        std::cout << "YES" << std::endl;
+        for (int p = 0; p < i; ++p) std::cout << "1 ";
+        for (int p = 0; p < j; ++p) std::cout << "-1 ";
+        std::cout << std::endl;
+        ok = true;
+        break;
+      }
+    }
+    if (!ok)
+      std::cout << "NO" << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1823/B --900
+#include <iostream>
+int main ()
+{
+  int t, n, k, a;
+  std::cin >> t;
+  while (t--)
+  {
+    std::cin >> n >> k;
+    int ans = 0;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> a; --a;
+      if (a % k != i % k)
+        ans++;
+    }
+    if (ans)
+    {
+      if (ans == 2)
+        ans = 1;
+      else
+        ans = -1;
+    }
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
+// https://codeforces.com/problemset/problem/1823/C --1300
+#include <iostream>
+#include <map>
+#include <vector>
+int main ()
+{
+  int t, n, a;
+  std::cin >> t;
+  constexpr int max_n = 1e7;
+  std::vector<int> d (max_n + 1, 0);
+  for (int i = 2; i * 2 <= max_n; ++i)
+    if (!d[i])
+      for (int j = i; j <= max_n; j += i)
+        d[j] = i;
+  for (int i = 2; i <= max_n; ++i)
+    if (d[i] == 0)
+      d[i] = i;
+  while (t--)
+  {
+    std::map<int, int> m;
+    std::cin >> n;
+    for (int i = 0; i < n; ++i)
+    {
+      std::cin >> a;
+      for (int j = 2; a > 1; ++j)
+        if (d[j] == j)
+        {
+          while (a % j == 0)
+          {
+            m[j]++;
+            a /= j;
+          }
+        } else if (d[a] == a)
+        {
+          m[a]++;
+          a = 1;
+        }
+    }
+    int cnt = 0, ans = 0;
+    for (const auto &el : m)
+      ans += el.second / 2,
+      cnt += el.second % 2;
+    ans += cnt / 3;
+    std::cout << ans << std::endl;
+  }
+}
+*/
+
+/*
 // https://codeforces.com/problemset/problem/1808/C --1900
 #include <iostream>
 #include <string>
@@ -58,6 +287,7 @@ int main ()
     std::cout << ans_num << ans_end << std::endl;
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1808/B --1200
