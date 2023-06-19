@@ -17,6 +17,8 @@ int main ()
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <set>
+#include <functional>
 int main ()
 {
   int _t, n, k, c, _v, _w;
@@ -33,6 +35,8 @@ int main ()
       v[_w].push_back (_v);
     }
     std::vector<int> len (n, -1);
+    std::vector<std::pair<int, int>> len_sort (n);
+    std::vector<std::multiset<int>> suns (n);
     struct data_t {
       int id, val;
       data_t (const int id, const int val) : id (id), val (val) {}
@@ -45,35 +49,53 @@ int main ()
       const int val = q.front ().val;
       q.pop ();
       len[cur] = val;
+      len_sort[cur] = std::make_pair (val, cur);
+      const int old_size = q.size ();
       for (const int next : v[cur])
       {
         if (len[next] >= 0)
           continue;
         q.emplace (next, val + 1);
       }
+      if (old_size == q.size ())
+      {
+        suns[cur].insert (len[cur]);
+      }
     }
+    std::sort (len_sort.begin (), len_sort.end (), std::greater<std::pair<int, int>> ());
+
+    for (const auto &el : len_sort)
+    {
+      const int cur = el.second;
+      for (const int parent : v[cur])
+      {
+        if (len[parent] < len[cur])
+        {
+          suns[parent].insert (*suns[cur].rbegin ());
+          if (suns[parent].size () > 2)
+            suns[parent].erase (suns[parent].begin ());
+          break;
+        }
+        if (parent == 0) break;
+      }
+    }
+    long long ans = 0;
     if (c >= k)
     {
-      const int ans = *std::max_element (len.begin (), len.end ());
-      std::cout << 1LL * ans * k << std::endl;
+      ans = 1LL * *std::max_element (len.begin (), len.end ()) * k;
     }
     else
     {
-      const int cur = 0;
-      if (v.size () > 2)
+      for (int i = 0; i < n; ++i)
       {
-        std::partial_sort (v[cur].begin (), v[cur].begin () + 2, v[cur].end (),
-          [&len, &cur](const int a, const int b)
-          {
-            if (a == cur) return false;
-            if (b == cur) return true;
-            return len[a] > len[b];
-          }
-        );
+        long long tans = 1LL * (*suns[i].rbegin () - len[i]) * k - 1LL * c * len[i];
+        if (suns[i].size () > 1)
+          tans += 1LL * (*suns[i].begin () - len[i]) * (k - c);
+        if (tans > ans)
+          ans = tans;
       }
-      long long ans = 1LL * (v[cur][0] + v[cur][1]) * k;
-      std::cout << 1LL * len[0] * k + 1LL * len[1] * (k - c) << std::endl;
     }
+    std::cout << ans << std::endl;
   }
 }
 
