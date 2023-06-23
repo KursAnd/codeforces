@@ -12,6 +12,129 @@ int main ()
 }
 */
 
+// https://codeforces.com/problemset/problem/1841/C --1800
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <array>
+int main ()
+{
+  int _t;
+  std::string s;
+  std::cin >> _t;
+  constexpr int alf_cnt = 5;
+  const std::array<int, alf_cnt> vals {1, 10, 100, 1000, 10000};
+  while (_t--)
+  {
+    std::array<std::vector<int>, alf_cnt> alf;
+    std::array<int, alf_cnt> first_plus, first_plus_abs;
+    for (int &el : first_plus) el = -1;
+    for (int &el : first_plus_abs) el = -1;
+    std::cin >> s;
+    for (char &c : s) c -= 'A';
+    const auto n = s.size ();
+    for (int i = 0; i < n; ++i)
+      alf[s[i]].push_back (i);
+    int sum = 0;
+    for (int i = 0; i < n; ++i)
+    {
+      bool plus = true;
+      for (int j = s[i] + 1; j < alf_cnt; ++j)
+        if (!alf[j].empty () && alf[j].back () > i)
+          plus = false;
+      if (first_plus[s[i]] < 0 && plus)
+      {
+        first_plus[s[i]] = std::lower_bound (alf[s[i]].begin (), alf[s[i]].end (), i) - alf[s[i]].begin ();
+        first_plus_abs[s[i]] = i;
+      }
+      sum += plus ? vals[s[i]] : -vals[s[i]];
+    }
+    for (int i = 0; i < alf_cnt - 1; ++i) if (first_plus[i] < 0) first_plus[i] = alf[i].size ();
+    for (int i = 0; i < alf_cnt - 1; ++i) if (first_plus_abs[i] < 0) first_plus_abs[i] = n;
+    first_plus.back () = 0;
+    for (int i = 0; i < n; ++i)
+    {
+      for (int alf_i = 0; alf_i < alf_cnt; ++alf_i)
+        if (s[i] != alf_i)
+        {
+          int tsum = 0;
+          for (int alf_j = 0; alf_j < alf_i; ++alf_j)
+            if (first_plus_abs[alf_j] < i)
+            {
+              const int first_pl = std::lower_bound (alf[alf_j].begin (), alf[alf_j].end (), i) - alf[alf_j].begin ();
+              tsum += ((alf[alf_j].size () - first_pl) - first_pl) * vals[alf_j];
+            }
+            else
+              tsum += ((alf[alf_j].size () - first_plus[alf_j]) - first_plus[alf_j]) * vals[alf_j];
+
+          tsum += (first_plus_abs[s[i]] > i ? vals[s[i]] : -vals[s[i]]);
+          tsum += (first_plus_abs[alf_i] < i ? vals[alf_i] : -vals[alf_i]);
+
+          for (int alf_j = alf_i; alf_j < alf_cnt; ++alf_j)
+            tsum += ((alf[alf_j].size () - first_plus[alf_j]) - first_plus[alf_j]) * vals[alf_j];
+
+          if (tsum > sum)
+            sum = tsum;
+        }
+    }
+    std::cout << sum << std::endl;
+  }
+}
+
+/*
+// https://codeforces.com/problemset/problem/1841/B --1000
+#define fastIO std::cin.tie (0); std::cout.tie (0); std::ios_base::sync_with_stdio (0)
+#include <iostream>
+#include <string>
+int main ()
+{
+  fastIO;
+  constexpr int max_q = 2e5;
+  int _t, q, x;
+  std::string s; s.reserve (max_q);
+  std::cin >> _t;
+  while (_t--)
+  {
+    std::cin >> q;
+    s.resize (q);
+    int start = -1, previous = -1;
+    bool was_shift = false;
+    int i = 0;
+    while (q--)
+    {
+      bool can_add = true;
+      std::cin >> x;
+      if (start < 0)
+      {
+        start = x;
+      }
+      else if (was_shift)
+      {
+        if (start < x || x < previous)
+          can_add = false;
+      }
+      else if (x < previous)
+      {
+        if (start >= x)
+          was_shift = true;
+        else
+          can_add = false;
+      }
+      if (can_add)
+      {
+        s[i++] = '1';
+        previous = x;
+      }
+      else
+        s[i++] = '0';
+    }
+    std::cout << s << std::endl;
+  }
+}
+*/
+
+/*
 // https://codeforces.com/problemset/problem/1822/F --1700
 #include <iostream>
 #include <vector>
@@ -98,6 +221,7 @@ int main ()
     std::cout << ans << std::endl;
   }
 }
+*/
 
 /*
 // https://codeforces.com/problemset/problem/1822/G1 --1700--2200
